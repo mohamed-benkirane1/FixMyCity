@@ -1,7 +1,7 @@
 import React from "react";
 import AccidentCard from "./AccidentCard";
 import Contacts from "./Contacts";
-import Stats from "./stats";
+import Stats from "./Stats";
 import SignalementForm from "./SignalementForm";
 import { accidents } from "../data/accidents";
 
