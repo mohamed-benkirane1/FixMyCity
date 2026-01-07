@@ -1,17 +1,17 @@
 /**
  * Configuration API centrale
- * Utilise axios avec interceptor pour automatiquement ajouter le token
+ * Axios instance avec interceptors pour authentification
  */
 
 import axios from 'axios';
-import { endpoints } from './endpoints';
 
-// Récupération de l'URL de l'API depuis les variables d'environnement
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+// URL de l'API depuis les variables d'environnement
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
 
 // Création de l'instance axios
 const api = axios.create({
   baseURL: API_URL,
+  timeout: 10000,
   headers: {
     'Content-Type': 'application/json'
   }
@@ -46,7 +46,5 @@ api.interceptors.response.use(
 );
 
 export default api;
-
-// Export des endpoints pour référence
 export { API_URL };
 

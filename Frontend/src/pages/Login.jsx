@@ -1,5 +1,6 @@
 /**
- * Login - Page de connexion
+ * Login - Page de connexion FixMyCity
+ * APPEL API RÉEL vers POST /api/auth/login
  */
 
 import { useState } from 'react';
@@ -15,6 +16,7 @@ function Login() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
+  // Redirection après login
   const from = location.state?.from?.pathname || '/';
 
   const {
@@ -28,10 +30,20 @@ function Login() {
     setError('');
 
     try {
+      // Appel API réel vers POST /api/auth/login
       const response = await authService.login(data);
+      
+      // Sauvegarde token + user dans localStorage et context
       authService.saveAuth(response.token, response.user);
       login(response.token, response.user);
-      navigate(from, { replace: true });
+
+      // Redirection selon le rôle
+      const userRole = response.user?.role;
+      if (userRole === 'agent' || userRole === 'admin') {
+        navigate('/dashboard', { replace: true });
+      } else {
+        navigate('/report/new', { replace: true });
+      }
     } catch (err) {
       setError(
         err.response?.data?.error || 

@@ -1,22 +1,28 @@
+
 /**
- * ReportNew - Page de création d'un nouveau signalement
+ * ReportNew - Create a new report (citizen only)
+ * POST /api/reports with multipart/form-data
  */
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import Loader from '../components/Loader';
 import { reportService } from '../services/report.service';
+import { useAuth } from '../context/AuthContext';
 
 function ReportNew() {
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const mapRef = useRef(null);
-  const markerRef = useRef(null);
-  const [coordinates, setCoordinates] = useState({ latitude: 48.8566, longitude: 2.3522 }); // Paris par défaut
+  const [success, setSuccess] = useState('');
+  const [coordinates, setCoordinates] = useState({ 
+    latitude: 48.8566, 
+    longitude: 2.3522 
+  }); // Paris default
 
   const {
     register,
@@ -25,19 +31,21 @@ function ReportNew() {
     formState: { errors }
   } = useForm();
 
-  // Initialiser la carte (simulation simple avec Google Maps ou OpenStreetMap)
+  // Set default coordinates
   useEffect(() => {
-    // Ici, vous pouvez intégrer Leaflet ou Google Maps
-    // Pour l'exemple, on utilise un sélecteur simple
-    console.log('Carte initialisée à:', coordinates);
-  }, []);
+    setValue('latitude', coordinates.latitude);
+    setValue('longitude', coordinates.longitude);
+  }, [coordinates, setValue]);
 
-  const handleMapClick = (e) => {
-    // Simulation: cliquer sur la carte pour obtenir les coordonnées
-    // Avec Leaflet: e.latlng.lat, e.latlng.lng
-    // Avec Google Maps: e.latLng.lat(), e.latLng.lng()
-    
-    // Pour l'exemple, on utilise des valeurs aléatoires près de Paris
+  // Redirect if not authenticated
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate('/login', { state: { from: '/report/new' } });
+    }
+  }, [isAuthenticated, navigate]);
+
+  const handleMapClick = () => {
+    // Random coordinates near Paris for demo
     const lat = 48.8566 + (Math.random() - 0.5) * 0.1;
     const lng = 2.3522 + (Math.random() - 0.5) * 0.1;
     
@@ -47,11 +55,16 @@ function ReportNew() {
   };
 
   const onSubmit = async (data) => {
+    if (!isAuthenticated) {
+      setError('Vous devez être connecté pour créer un signalement');
+      return;
+    }
+
     setLoading(true);
     setError('');
+    setSuccess('');
 
     try {
-      // Créer FormData pour l'upload d'image
       const formData = new FormData();
       formData.append('title', data.title);
       formData.append('description', data.description);
@@ -59,13 +72,19 @@ function ReportNew() {
       formData.append('latitude', data.latitude);
       formData.append('longitude', data.longitude);
       
-      // Ajouter l'image si sélectionnée
       if (data.image && data.image[0]) {
         formData.append('image', data.image[0]);
       }
 
+      // Real API call to POST /api/reports
       await reportService.createReport(formData);
-      navigate('/reports');
+      
+      setSuccess('Signalement créé avec succès !');
+      
+      setTimeout(() => {
+        navigate('/my-reports');
+      }, 1500);
+      
     } catch (err) {
       setError(
         err.response?.data?.error || 
@@ -76,11 +95,9 @@ function ReportNew() {
     }
   };
 
-  // Définir les coordonnées par défaut dans le formulaire
-  useEffect(() => {
-    setValue('latitude', coordinates.latitude);
-    setValue('longitude', coordinates.longitude);
-  }, [coordinates, setValue]);
+  if (!isAuthenticated) {
+    return <Loader />;
+  }
 
   return (
     <div className="page-wrapper">
@@ -93,18 +110,22 @@ function ReportNew() {
           </h1>
 
           {error && <div className="alert alert-error">{error}</div>}
+          {success && <div className="alert alert-success">{success}</div>}
 
           <form onSubmit={handleSubmit(onSubmit)} className="report-form">
             <div className="form-group">
               <label htmlFor="type">Type de problème *</label>
-              <select id="type" {...register('type', { required: 'Sélectionnez un type' })}>
+              <select 
+                id="type" 
+                {...register('type', { required: 'Sélectionnez un type' })}
+              >
                 <option value="">Choisir un type...</option>
-                <option value="voirie"><i className="fa fa-road"></i> Voirie (nids de poules, trottoirs...)</option>
-                <option value="éclairage"><i className="fa fa-lightbulb"></i> Éclairage public</option>
-                <option value="déchets"><i className="fa fa-trash"></i> Déchets / Propreté</option>
-                <option value="espaces_verts"><i className="fa fa-tree"></i> Espaces verts</option>
-                <option value="bruit"><i className="fa fa-volume-up"></i> Nuisances sonores</option>
-                <option value="autre"><i className="fa fa-exclamation-circle"></i> Autre</option>
+                <option value="voirie">Voirie (nids de poules, trottoirs...)</option>
+                <option value="éclairage">Éclairage public</option>
+                <option value="déchets">Déchets / Propreté</option>
+                <option value="espaces_verts">Espaces verts</option>
+                <option value="bruit">Nuisances sonores</option>
+                <option value="autre">Autre</option>
               </select>
               {errors.type && (
                 <span className="error-message">{errors.type.message}</span>
@@ -186,7 +207,7 @@ function ReportNew() {
               
               <small className="help-text">
                 <i className="fa fa-info-circle"></i>
-                Cliquez sur la carte pour sélectionner l'emplacement exact du problème.
+                Cliquez sur la carte pour sélectionner l'emplacement exact.
               </small>
             </div>
 
@@ -199,7 +220,7 @@ function ReportNew() {
                 {...register('image')}
               />
               <small className="help-text">
-                Formats acceptés: JPG, PNG, GIF. Taille max: 5MB
+                Formats: JPG, PNG, GIF. Taille max: 5MB
               </small>
             </div>
 

@@ -1,5 +1,7 @@
+
 /**
- * MyReports - Liste des signalements de l'utilisateur connecté (citoyen)
+ * MyReports - Current user's reports (citizen only)
+ * GET /api/reports/mine
  */
 
 import { useState, useEffect } from 'react';
@@ -9,22 +11,27 @@ import Footer from '../components/Footer';
 import ReportCard from '../components/ReportCard';
 import Loader from '../components/Loader';
 import { reportService } from '../services/report.service';
+import { useAuth } from '../context/AuthContext';
 
 function MyReports() {
+  const { isAuthenticated } = useAuth();
   const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [filter, setFilter] = useState('all');
 
   useEffect(() => {
-    fetchMyReports();
-  }, []);
+    if (isAuthenticated) {
+      fetchMyReports();
+    }
+  }, [isAuthenticated]);
 
   const fetchMyReports = async () => {
     setLoading(true);
     setError('');
 
     try {
+      // Real API call to GET /api/reports/mine
       const data = await reportService.getMyReports();
       setReports(data.reports || []);
     } catch (err) {
@@ -34,7 +41,6 @@ function MyReports() {
     }
   };
 
-  // Filtrer les rapports
   const filteredReports = filter === 'all' 
     ? reports 
     : reports.filter(r => r.status === filter);

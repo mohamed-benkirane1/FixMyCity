@@ -1,5 +1,7 @@
+
 /**
- * ReportDetails - Détail d'un signalement (avec possibilité de changer le statut pour agent/admin)
+ * ReportDetails - Report details with status update for agent/admin
+ * GET /api/reports/:id + PUT /api/reports/:id/status
  */
 
 import { useState, useEffect } from 'react';
@@ -31,6 +33,7 @@ function ReportDetails() {
     setError('');
 
     try {
+      // Real API call to GET /api/reports/:id
       const data = await reportService.getReportById(id);
       setReport(data.report);
     } catch (err) {
@@ -43,21 +46,13 @@ function ReportDetails() {
   const handleStatusChange = async (newStatus) => {
     setUpdating(true);
     try {
+      // Real API call to PUT /api/reports/:id/status
       const data = await reportService.updateStatus(id, newStatus);
       setReport(data.report);
     } catch (err) {
       setError(err.response?.data?.error || 'Erreur lors de la mise à jour du statut');
     } finally {
       setUpdating(false);
-    }
-  };
-
-  const getStatusColor = (status) => {
-    switch (status) {
-      case 'recu': return 'orange';
-      case 'en_cours': return 'blue';
-      case 'resolu': return 'green';
-      default: return 'gray';
     }
   };
 
@@ -188,7 +183,7 @@ function ReportDetails() {
             </div>
           </div>
 
-          {/* Zone de mise à jour du statut (agent/admin uniquement) */}
+          {/* Status update section (agent/admin only) */}
           {canEditStatus && (
             <div className="status-update-section">
               <h3><i className="fa fa-edit"></i> Mettre à jour le statut</h3>

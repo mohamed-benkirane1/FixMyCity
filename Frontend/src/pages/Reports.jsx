@@ -1,5 +1,7 @@
+
 /**
- * Reports - Liste des signalements (page publique ou citoyen)
+ * Reports - List of reports (public or citizen view)
+ * GET /api/reports (agent/admin) or /api/reports/mine (citizen)
  */
 
 import { useState, useEffect } from 'react';
@@ -28,6 +30,7 @@ function Reports() {
 
     try {
       let data;
+      // Get all reports for agent/admin, own reports for citizen
       if (user?.role === 'agent' || user?.role === 'admin') {
         data = await reportService.getAllReports();
       } else {
@@ -41,7 +44,6 @@ function Reports() {
     }
   };
 
-  // Filtrer les rapports
   const filteredReports = filter === 'all' 
     ? reports 
     : reports.filter(r => r.status === filter);

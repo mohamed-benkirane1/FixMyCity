@@ -1,5 +1,7 @@
+
 /**
- * Dashboard - Tableau de bord agent/admin
+ * Dashboard - Agent/Admin dashboard
+ * GET /api/reports + PUT /api/reports/:id/status
  */
 
 import { useState, useEffect } from 'react';
@@ -33,11 +35,12 @@ function Dashboard() {
     setError('');
 
     try {
+      // Real API call to GET /api/reports
       const data = await reportService.getAllReports();
       const reportsList = data.reports || [];
       setReports(reportsList);
       
-      // Calculer les statistiques
+      // Calculate statistics
       setStats({
         total: reportsList.length,
         recu: reportsList.filter(r => r.status === 'recu').length,
@@ -51,7 +54,6 @@ function Dashboard() {
     }
   };
 
-  // Filtrer les rapports
   const filteredReports = filter === 'all' 
     ? reports 
     : reports.filter(r => r.status === filter);
@@ -72,7 +74,7 @@ function Dashboard() {
             <p>Gestion des signalements de la plateforme</p>
           </div>
 
-          {/* Statistiques */}
+          {/* Statistics */}
           <div className="stats-grid">
             <div className="stat-card">
               <div className="stat-icon">
@@ -117,7 +119,7 @@ function Dashboard() {
 
           {error && <div className="alert alert-error">{error}</div>}
 
-          {/* Filtres */}
+          {/* Filters */}
           <div className="filter-bar">
             <button 
               className={`filter-btn ${filter === 'all' ? 'active' : ''}`}
@@ -148,7 +150,7 @@ function Dashboard() {
             </button>
           </div>
 
-          {/* Liste des signalements */}
+          {/* Reports list */}
           {filteredReports.length === 0 ? (
             <div className="empty-state">
               <i className="fa fa-inbox"></i>

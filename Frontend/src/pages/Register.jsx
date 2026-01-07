@@ -1,5 +1,6 @@
 /**
- * Register - Page d'inscription
+ * Register - Page d'inscription FixMyCity
+ * APPEL API RÉEL vers POST /api/auth/register + auto-login
  */
 
 import { useState } from 'react';
@@ -28,6 +29,7 @@ function Register() {
     setError('');
 
     try {
+      // Appel API réel vers POST /api/auth/register
       const response = await authService.register({
         name: data.name,
         email: data.email,
@@ -35,10 +37,17 @@ function Register() {
         role: data.role
       });
       
-      // Connexion automatique après inscription
+      // Auto-login après inscription
       authService.saveAuth(response.token, response.user);
       login(response.token, response.user);
-      navigate('/');
+
+      // Redirection selon le rôle
+      const userRole = response.user?.role;
+      if (userRole === 'agent' || userRole === 'admin') {
+        navigate('/dashboard', { replace: true });
+      } else {
+        navigate('/report/new', { replace: true });
+      }
     } catch (err) {
       setError(
         err.response?.data?.error || 

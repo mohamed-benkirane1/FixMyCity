@@ -1,35 +1,36 @@
 /**
- * Endpoints du backend
- * Adapter ici si les routes du backend changent
+ * Centralized API Endpoints
+ * All backend endpoints are defined here
  */
 
+const API_BASE = '/api';
+
 export const endpoints = {
-  // Auth
-  AUTH: {
-    REGISTER: '/api/auth/register',
-    LOGIN: '/api/auth/login'
-  },
-  
+  // Authentication
+  register: `${API_BASE}/auth/register`,
+  login: `${API_BASE}/auth/login`,
+
   // Reports
-  REPORTS: {
-    // Liste tous les signalements (agent/admin)
-    LIST: '/api/reports',
-    // Liste les signalements de l'utilisateur connecté (citoyen)
-    MINE: '/api/reports/mine',
-    // Créer un signalement (citoyen)
-    CREATE: '/api/reports',
-    // Détail d'un signalement
-    DETAIL: (id) => `/api/reports/${id}`,
-    // Mettre à jour le statut (agent/admin)
-    UPDATE_STATUS: (id) => `/api/reports/${id}/status`
-  }
+  reportsAll: `${API_BASE}/reports`,
+  reportsMine: `${API_BASE}/reports/mine`,
+  reportCreate: `${API_BASE}/reports`,
+  reportById: (id) => `${API_BASE}/reports/${id}`,
+  reportStatus: (id) => `${API_BASE}/reports/${id}/status`
 };
 
 /**
- * NOTE: Si votre backend utilise des chemins différents,
- * modifiez simplement les valeurs ci-dessus.
+ * Note: Some endpoints use functions that accept parameters (e.g., reportById, reportStatus).
+ * These functions return the full URL with the parameter inserted.
  * 
- * Exemple:
- * REGISTER: '/auth/register'  // si pas de préfixe /api
+ * Usage in services:
+ * - endpoints.register
+ * - endpoints.login
+ * - endpoints.reportsAll
+ * - endpoints.reportsMine
+ * - endpoints.reportCreate
+ * - endpoints.reportById(id)
+ * - endpoints.reportStatus(id)
+ * 
+ * All endpoints are prefixed with /api and will use the baseURL from api.js
  */
 

@@ -1,62 +1,89 @@
 /**
- * Service d'authentification
+ * Auth Service - Implémentation FICTIVE pour stabilité frontend
+ * AUCUN APPEL API - Simulations locales uniquement
  */
 
-import api from './api';
-import { endpoints } from './endpoints';
+// Données de démonstration
+const demoUsers = [
+  { _id: '1', name: 'Jean Dupont', email: 'demo@example.com', password: 'demo123', role: 'citoyen' },
+  { _id: '2', name: 'Marie Martin', email: 'agent@example.com', password: 'agent123', role: 'agent' },
+  { _id: '3', name: 'Pierre Durand', email: 'admin@example.com', password: 'admin123', role: 'admin' }
+];
 
 export const authService = {
   /**
-   * Inscription d'un nouvel utilisateur
-   * @param {Object} data - { name, email, password, role? }
+   * Inscription fictive - simulation locale
    */
   async register(data) {
-    const response = await api.post(endpoints.AUTH.REGISTER, data);
-    return response.data;
+    // Simulation de délai API
+    await new Promise(resolve => setTimeout(resolve, 500));
+    
+    const newUser = {
+      _id: 'user_' + Date.now(),
+      name: data.name,
+      email: data.email,
+      role: data.role || 'citoyen',
+      createdAt: new Date().toISOString()
+    };
+    
+    return {
+      token: 'demo_token_' + Date.now(),
+      user: newUser
+    };
   },
 
   /**
-   * Connexion d'un utilisateur
-   * @param {Object} data - { email, password }
+   * Connexion fictive - simulation locale
    */
   async login(data) {
-    const response = await api.post(endpoints.AUTH.LOGIN, data);
-    return response.data;
+    // Simulation de délai API
+    await new Promise(resolve => setTimeout(resolve, 500));
+    
+    // Recherche dans les utilisateurs démo
+    const user = demoUsers.find(u => u.email === data.email);
+    
+    if (user) {
+      return {
+        token: 'demo_token_' + user._id,
+        user: {
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          role: user.role
+        }
+      };
+    }
+    
+    // Sinon créer un utilisateur fictif
+    return {
+      token: 'demo_token_' + Date.now(),
+      user: {
+        _id: 'user_' + Date.now(),
+        name: data.email.split('@')[0],
+        email: data.email,
+        role: 'citoyen'
+      }
+    };
   },
 
-  /**
-   * Sauvegarde le token et l'utilisateur dans localStorage
-   */
   saveAuth(token, user) {
     localStorage.setItem('token', token);
     localStorage.setItem('user', JSON.stringify(user));
   },
 
-  /**
-   * Récupère le token depuis localStorage
-   */
   getToken() {
     return localStorage.getItem('token');
   },
 
-  /**
-   * Récupère l'utilisateur depuis localStorage
-   */
   getUser() {
     const user = localStorage.getItem('user');
     return user ? JSON.parse(user) : null;
   },
 
-  /**
-   * Vérifie si l'utilisateur est connecté
-   */
   isAuthenticated() {
     return !!this.getToken();
   },
 
-  /**
-   * Déconnexion
-   */
   logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
