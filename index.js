@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 require("dotenv").config();
 
 const app = express();
@@ -8,7 +9,12 @@ const connectDB = require("./src/config/db");
 connectDB();
 
 // Middlewares
+app.use(cors()); // Enable CORS for frontend-backend communication
 app.use(express.json());
+app.get("/api/health", (req, res) => {
+  res.json({ ok: true, message: "Backend OK ✅" });
+});
+
 
 // Static uploads
 app.use("/uploads", express.static("uploads"));
