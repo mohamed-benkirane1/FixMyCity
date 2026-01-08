@@ -6,8 +6,8 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { useAuth } from '../context/AuthContext';
-import { authService } from '../services/auth.service';
+import { useAuth } from './context/AuthContext';
+import { authService } from './services/auth.service';
 
 function Register() {
   const { login } = useAuth();
@@ -69,12 +69,14 @@ function Register() {
               id="name"
               type="text"
               placeholder="Jean Dupont"
+              aria-invalid={errors.name ? true : false}
+              aria-describedby={errors.name ? 'name-error' : undefined}
               {...register('name', {
                 required: 'Le nom est requis',
                 minLength: { value: 2, message: 'Le nom doit contenir au moins 2 caractères' }
               })}
             />
-            {errors.name && <span className="error-message">{errors.name.message}</span>}
+            {errors.name && <span id="name-error" role="alert" className="error-message">{errors.name.message}</span>}
           </div>
 
           <div className="form-group">
@@ -83,9 +85,11 @@ function Register() {
               id="email"
               type="email"
               placeholder="votre@email.com"
+              aria-invalid={errors.email ? true : false}
+              aria-describedby={errors.email ? 'email-error' : undefined}
               {...register('email', { required: 'L\'email est requis' })}
             />
-            {errors.email && <span className="error-message">{errors.email.message}</span>}
+            {errors.email && <span id="email-error" role="alert" className="error-message">{errors.email.message}</span>}
           </div>
 
           <div className="form-group">
@@ -94,11 +98,14 @@ function Register() {
               id="password"
               type="password"
               placeholder="••••••••"
+              aria-invalid={errors.password ? true : false}
+              aria-describedby={errors.password ? 'password-error' : undefined}
               {...register('password', {
                 required: 'Le mot de passe est requis',
                 minLength: { value: 6, message: 'Minimum 6 caractères' }
               })}
             />
+            {errors.password && <span id="password-error" role="alert" className="error-message">{errors.password.message}</span>}
           </div>
 
           <div className="form-group">
@@ -107,10 +114,13 @@ function Register() {
               id="confirmPassword"
               type="password"
               placeholder="••••••••"
+              aria-invalid={errors.confirmPassword ? true : false}
+              aria-describedby={errors.confirmPassword ? 'confirmPassword-error' : undefined}
               {...register('confirmPassword', {
                 validate: value => value === password || 'Les mots de passe ne correspondent pas'
               })}
             />
+            {errors.confirmPassword && <span id="confirmPassword-error" role="alert" className="error-message">{errors.confirmPassword.message}</span>}
           </div>
 
           <div className="form-group">

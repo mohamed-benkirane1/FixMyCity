@@ -63,8 +63,11 @@ function Login() {
               id="email"
               type="email"
               placeholder="votre@email.com"
+              aria-invalid={errors.email ? true : false}
+              aria-describedby={errors.email ? 'email-error' : undefined}
               {...register('email', { required: 'L\'email est requis' })}
             />
+            {errors.email && <span id="email-error" role="alert" className="error-message">{errors.email.message}</span>}
           </div>
 
           <div className="form-group">
@@ -73,8 +76,11 @@ function Login() {
               id="password"
               type="password"
               placeholder="••••••••"
+              aria-invalid={errors.password ? true : false}
+              aria-describedby={errors.password ? 'password-error' : undefined}
               {...register('password', { required: 'Le mot de passe est requis' })}
             />
+            {errors.password && <span id="password-error" role="alert" className="error-message">{errors.password.message}</span>}
           </div>
 
           <button type="submit" className="btn-submit" disabled={loading}>

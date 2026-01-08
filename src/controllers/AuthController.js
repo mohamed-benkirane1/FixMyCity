@@ -35,11 +35,18 @@ const register = async (req, res) => {
       role: safeRole
     });
 
+    // Générer le token JWT
+    const token = jwt.sign(
+      { id: user._id, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+
     // Ne jamais renvoyer le password
     const userObj = user.toObject();
     delete userObj.password;
 
-    return res.status(201).json({ user: userObj });
+    return res.status(201).json({ token, user: userObj });
   } catch (err) {
     console.error("REGISTER ERROR:", err);
     return res.status(500).json({ error: "Internal server error" });

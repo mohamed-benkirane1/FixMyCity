@@ -3,8 +3,9 @@
  */
 
 import { Link } from 'react-router-dom';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
+import Header from './components/Header';
+import Footer from './components/Footer';
+import { MapPin, Zap, ShieldCheck } from 'lucide-react';
 
 function Home() {
   return (
@@ -32,19 +33,19 @@ function Home() {
 
       <section className="features">
         <Link to="/report/new" className="feature-card">
-          <i className="fa fa-map"></i>
+          <MapPin className="w-6 h-6" />
           <h3>Localisation précise</h3>
           <p>Sélectionnez l'emplacement exact sur la carte.</p>
         </Link>
 
         <Link to="/report/new" className="feature-card">
-          <i className="fa fa-bolt"></i>
+          <Zap className="w-6 h-6" />
           <h3>Signalement rapide</h3>
           <p>Un formulaire simple et rapide.</p>
         </Link>
 
         <Link to="/about" className="feature-card">
-          <i className="fa fa-shield"></i>
+          <ShieldCheck className="w-6 h-6" />
           <h3>Suivi sécurisé</h3>
           <p>Suivez l'état de votre signalement.</p>
         </Link>

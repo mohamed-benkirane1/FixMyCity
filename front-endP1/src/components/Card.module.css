@@ -1,0 +1,61 @@
+@import '../styles/variables.css';
+
+.card {
+  background: var(--bg-primary);
+  border: 1px solid var(--color-gray);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--motion-duration-sm) var(--motion-ease), box-shadow var(--motion-duration-sm) var(--motion-ease), border-color var(--motion-duration-sm) var(--motion-ease);
+  position: relative;
+  overflow: hidden;
+  --reveal-delay: 0ms;
+  will-change: transform, opacity;
+}
+
+.card.reveal {
+  opacity: 0;
+  transform: translateY(12px);
+  animation: revealUp var(--motion-duration-md) var(--motion-ease) both;
+  animation-delay: var(--reveal-delay);
+}
+
+.glass {
+  background: var(--glass-bg);
+  border: 1px solid rgba(255,255,255,0.06);
+  backdrop-filter: blur(var(--glass-blur));
+}
+
+.hoverable:hover {
+  transform: translateY(-10px) rotateX(1deg);
+  box-shadow: var(--elevated-shadow);
+  border-color: var(--color-primary-light);
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.clickable:focus-visible {
+  outline: none;
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: 0 0 0 var(--focus-ring-width) var(--focus-ring);
+  border-radius: var(--radius-lg);
+}
+
+.clickable:active {
+  transform: translateY(-2px);
+}
+
+.ribbon {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: var(--gradient-primary);
+  color: var(--text-inverse);
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.8rem;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}

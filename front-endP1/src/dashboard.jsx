@@ -4,12 +4,12 @@
 
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
-import Loader from '../components/Loader';
-import ReportCard from '../components/ReportCard';
-import { reportService } from '../services/report.service';
-import { useAuth } from '../context/AuthContext';
+import Header from './components/Header';
+import Footer from './components/Footer';
+import Loader from './components/Loader';
+import ReportCard from './components/ReportCard';
+import { reportService } from './services/report.service';
+import { useAuth } from './context/AuthContext';
 
 function Dashboard() {
   const { user } = useAuth();
@@ -30,11 +30,11 @@ function Dashboard() {
 
   const fetchAllReports = async () => {
     setLoading(true);
-    setError('');
+    setError(null);
 
     try {
       const data = await reportService.getAllReports();
-      const reportsList = data.reports || [];
+      const reportsList = Array.isArray(data) ? data : (data?.reports || []);
       setReports(reportsList);
       
       // Calculer les statistiques
@@ -45,7 +45,8 @@ function Dashboard() {
         resolu: reportsList.filter(r => r.status === 'resolu').length
       });
     } catch (err) {
-      setError(err.response?.data?.error || 'Erreur lors du chargement des signalements');
+      console.error('Erreur lors du chargement des signalements:', err);
+      setError(err.message || 'Erreur lors du chargement des signalements');
     } finally {
       setLoading(false);
     }

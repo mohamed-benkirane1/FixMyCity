@@ -6,8 +6,8 @@
 import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { useAuth } from '../context/AuthContext';
-import { authService } from '../services/auth.service';
+import { useAuth } from './context/AuthContext';
+import { authService } from './services/auth.service';
 
 function Login() {
   const { login } = useAuth();
