@@ -26,15 +26,14 @@ router.post(
 router.get(
   '/mine',
   authMiddleware,
-  roleMiddleware(['citoyen']),
   getMyReports
 );
 
-// ✅ All reports (agent/admin)
+// ✅ All reports (citoyen/agent/admin)
 router.get(
   '/',
   authMiddleware,
-  roleMiddleware(['agent', 'admin']),
+  roleMiddleware(['citoyen', 'agent', 'admin']),
   getAllReports
 );
 

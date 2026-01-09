@@ -1,40 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useReports } from '../context/ReportsContext';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { MapPin, Camera, Users, CheckCircle, ArrowRight, Clock, Shield } from 'lucide-react';
-import { reportService } from '../services/report.service';
 
 function Home() {
   const { user } = useAuth();
-  const [stats, setStats] = useState({
-    total: 0,
-    resolved: 0,
-    inProgress: 0
-  });
-  const [loading, setLoading] = useState(true);
+  const { stats, loading, fetchReports } = useReports();
 
   useEffect(() => {
-    fetchStats();
-  }, []);
-
-  const fetchStats = async () => {
-    try {
-      const data = await reportService.getAllReports();
-      const reports = Array.isArray(data) ? data : (data?.reports || []);
-
-      setStats({
-        total: reports.length,
-        resolved: reports.filter(r => r.status === 'resolu').length,
-        inProgress: reports.filter(r => r.status === 'en_cours').length
-      });
-    } catch (error) {
-      console.error('Erreur lors du chargement des statistiques:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    const isMyReports = user?.role === 'citoyen';
+    fetchReports(isMyReports);
+  }, [user, fetchReports]);
 
   return (
     <div className="page">

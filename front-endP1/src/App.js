@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+import { ReportsProvider } from './context/ReportsContext';
 import Home from './pages/Home';
 import About from './pages/About';
 import Login from './pages/Login';
@@ -17,21 +18,23 @@ import './styles/global.css';
 function App() {
   return (
     <AuthProvider>
-      <Router>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/reports" element={<Reports />} />
-          <Route path="/my-reports" element={<MyReports />} />
-          <Route path="/report/new" element={<ReportNew />} />
-          <Route path="/report/:id" element={<ReportDetails />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/forbidden" element={<Forbidden />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </Router>
+      <ReportsProvider>
+        <Router>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/reports" element={<Reports />} />
+            <Route path="/my-reports" element={<MyReports />} />
+            <Route path="/report/new" element={<ReportNew />} />
+            <Route path="/report/:id" element={<ReportDetails />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/forbidden" element={<Forbidden />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Router>
+      </ReportsProvider>
     </AuthProvider>
   );
 }

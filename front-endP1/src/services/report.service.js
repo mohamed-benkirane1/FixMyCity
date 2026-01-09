@@ -42,9 +42,9 @@ const reportService = {
             },
           }
         : {};
-      
+
       const response = await api.post('/reports', reportData, config);
-      return response.data;
+      return parseResponse(response);
     } catch (error) {
       throw normalizeError(error);
     }

@@ -3,19 +3,11 @@ const Report = require('../models/ReportModel');
 
 const createReport = async (req, res) => {
   try {
-    const { title, description, type, latitude, longitude } = req.body || {};
+    const { title, description, type, location } = req.body || {};
 
     // ✅ Validation champs texte
-    if (!title || !description || !type || latitude === undefined || longitude === undefined) {
-      return res.status(400).json({ error: "title, description, type, latitude and longitude are required" });
-    }
-
-    const lat = Number(latitude);
-    const lng = Number(longitude);
-
-    // ✅ Validation nombres
-    if (Number.isNaN(lat) || Number.isNaN(lng)) {
-      return res.status(400).json({ error: "latitude and longitude must be valid numbers" });
+    if (!title || !description || !type) {
+      return res.status(400).json({ error: "title, description, and type are required" });
     }
 
     // ✅ Image (si envoyée)
@@ -25,9 +17,8 @@ const createReport = async (req, res) => {
       title,
       description,
       type,
+      location: location || '',
       image: imagePath,
-      latitude: lat,
-      longitude: lng,
       userId: req.user.id
     });
 

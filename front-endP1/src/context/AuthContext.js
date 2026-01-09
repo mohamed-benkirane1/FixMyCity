@@ -19,6 +19,9 @@ export const AuthProvider = ({ children }) => {
     const { token, user: savedUser } = authService.getAuth();
     if (token && savedUser) {
       setUser(savedUser);
+    } else if (token && !savedUser) {
+      // Token exists but user not in localStorage, logout to clear invalid state
+      logout();
     }
     setLoading(false);
   }, []);

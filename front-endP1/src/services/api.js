@@ -2,10 +2,10 @@ import axios from 'axios';
 
 // Créer une instance axios avec la configuration de base
 const api = axios.create({
-  baseURL: '/api', // Utilise le proxy configuré dans setupProxy.js
-  headers: {
-    'Content-Type': 'application/json',
-  },
+  baseURL: process.env.NODE_ENV === 'production'
+    ? (process.env.REACT_APP_API_URL || 'http://localhost:5000/api')
+    : '/api', // En dev, utilise le proxy, en prod utilise l'URL complète
+  // Supprimer le Content-Type par défaut pour laisser Axios le définir automatiquement (json pour les données, multipart pour FormData)
 });
 
 // Intercepteur pour ajouter le token JWT aux requêtes
@@ -27,13 +27,32 @@ api.interceptors.response.use(
   (response) => {
     return response;
   },
-  (error) => {
+  async (error) => {
     if (error.response?.status === 401) {
       // Token expiré ou invalide
       localStorage.removeItem('token');
       localStorage.removeItem('user');
       window.location.href = '/login';
     }
+
+    // Gestion des erreurs 429 (Too Many Requests) avec retry
+    if (error.response?.status === 429) {
+      const config = error.config;
+      if (!config._retry) {
+        config._retry = true;
+        // Exponential backoff: attendre 1s, puis 2s, puis 4s, etc.
+        const retryDelay = Math.pow(2, config._retryCount || 0) * 1000;
+        config._retryCount = (config._retryCount || 0) + 1;
+
+        // Limiter à 3 tentatives maximum
+        if (config._retryCount <= 3) {
+          console.warn(`Rate limit exceeded, retrying in ${retryDelay}ms...`);
+          await new Promise(resolve => setTimeout(resolve, retryDelay));
+          return api(config);
+        }
+      }
+    }
+
     return Promise.reject(error);
   }
 );

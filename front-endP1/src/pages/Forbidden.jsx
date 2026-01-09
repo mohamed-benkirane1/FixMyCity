@@ -5,6 +5,7 @@
 import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import { Home, LogIn, Lock } from 'lucide-react';
 
 function Forbidden() {
   return (
@@ -15,7 +16,7 @@ function Forbidden() {
         <div className="container">
           <div className="error-content">
             <div className="error-icon">
-              <i className="fa fa-lock"></i>
+              <Lock className="w-12 h-12" />
             </div>
             <h1>403</h1>
             <h2>Accès interdit</h2>
@@ -23,11 +24,11 @@ function Forbidden() {
               Vous n'avez pas les permissions nécessaires pour accéder à cette page.
             </p>
             <div className="error-actions">
-              <Link to="/" className="btn-primary">
-                <i className="fa fa-home"></i> Retour à l'accueil
+              <Link to="/" className="btn btn-primary">
+                <Home className="w-4 h-4 mr-2 inline-block" /> Retour à l'accueil
               </Link>
-              <Link to="/login" className="btn-secondary">
-                <i className="fa fa-sign-in-alt"></i> Se connecter
+              <Link to="/login" className="btn btn-secondary">
+                <LogIn className="w-4 h-4 mr-2 inline-block" /> Se connecter
               </Link>
             </div>
           </div>

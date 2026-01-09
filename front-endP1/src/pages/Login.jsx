@@ -8,6 +8,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import { LogIn } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { authService } from '../services/auth.service';
 import Button from '../components/Button';
@@ -58,7 +59,7 @@ function Login() {
       <section className="section">
         <div className="container">
           <div className="auth-card">
-            <h2 className="auth-title"><i className="fa fa-sign-in-alt" aria-hidden="true"></i> Connexion</h2>
+            <h2 className="auth-title"><LogIn className="w-5 h-5 inline-block mr-2" aria-hidden="true" /> Connexion</h2>
 
             {error && (
               <div className="alert alert-error" role="alert" aria-live="assertive">{error}</div>

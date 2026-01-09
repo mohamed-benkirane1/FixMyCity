@@ -8,6 +8,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import { UserPlus } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { authService } from '../services/auth.service';
 import Button from '../components/Button';
@@ -64,7 +65,7 @@ function Register() {
       <section className="section">
         <div className="container">
           <div className="auth-card">
-            <h2 className="auth-title"><i className="fa fa-user-plus" aria-hidden="true"></i> Inscription</h2>
+            <h2 className="auth-title"><UserPlus className="w-5 h-5 inline-block mr-2" aria-hidden="true" /> Inscription</h2>
 
             {error && <div className="alert alert-error" role="alert" aria-live="assertive">{error}</div>}
 

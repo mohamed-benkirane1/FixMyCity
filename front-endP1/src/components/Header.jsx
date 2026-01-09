@@ -44,9 +44,6 @@ function Header() {
         </Link>
 
         {/* Desktop Navigation */}
-        <div className="search-wrap">
-          <input className="search-input" placeholder="Rechercher (ex: nid de poule, rue...)" />
-        </div>
         <nav className="nav">
           <Link
             to="/"
@@ -70,15 +67,17 @@ function Header() {
                 className={isActive('/reports') ? 'active' : ''}
                 onClick={closeMenu}
               >
-                Signalements
+                {user.role === 'citoyen' ? 'Mes signalements' : 'Signalements'}
               </Link>
-              <Link
-                to="/my-reports"
-                className={isActive('/my-reports') ? 'active' : ''}
-                onClick={closeMenu}
-              >
-                Mes signalements
-              </Link>
+              {user.role !== 'citoyen' && (
+                <Link
+                  to="/my-reports"
+                  className={isActive('/my-reports') ? 'active' : ''}
+                  onClick={closeMenu}
+                >
+                  Mes signalements
+                </Link>
+              )}
               {(user.role === 'agent' || user.role === 'admin') && (
                 <Link
                   to="/dashboard"
@@ -91,7 +90,6 @@ function Header() {
 
               <div className="flex items-center gap-3 ml-4 pl-4 header-profile">
                 <div className="profile-info">
-                  <div className="avatar">{user.nom ? user.nom.charAt(0).toUpperCase() : 'U'}</div>
                   <div className="profile-name">{user.nom}</div>
                 </div>
                 <button
@@ -160,15 +158,17 @@ function Header() {
                 className={isActive('/reports') ? 'active' : ''}
                 onClick={closeMenu}
               >
-                Signalements
+                {user.role === 'citoyen' ? 'Mes signalements' : 'Signalements'}
               </Link>
-              <Link
-                to="/my-reports"
-                className={isActive('/my-reports') ? 'active' : ''}
-                onClick={closeMenu}
-              >
-                Mes signalements
-              </Link>
+              {user.role !== 'citoyen' && (
+                <Link
+                  to="/my-reports"
+                  className={isActive('/my-reports') ? 'active' : ''}
+                  onClick={closeMenu}
+                >
+                  Mes signalements
+                </Link>
+              )}
               {(user.role === 'agent' || user.role === 'admin') && (
                 <Link
                   to="/dashboard"

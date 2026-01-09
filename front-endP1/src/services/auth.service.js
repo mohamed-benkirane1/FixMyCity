@@ -1,10 +1,10 @@
-import api, { normalizeError } from './api';
+import authAPI from '../api/auth';
+import { normalizeError } from './api';
 
 const authService = {
   login: async (credentials) => {
     try {
-      const response = await api.post('/auth/login', credentials);
-      return response.data;
+      return await authAPI.login(credentials);
     } catch (error) {
       throw normalizeError(error);
     }
@@ -12,8 +12,7 @@ const authService = {
 
   register: async (userData) => {
     try {
-      const response = await api.post('/auth/register', userData);
-      return response.data;
+      return await authAPI.register(userData);
     } catch (error) {
       throw normalizeError(error);
     }
@@ -21,8 +20,7 @@ const authService = {
 
   getProfile: async () => {
     try {
-      const response = await api.get('/auth/profile');
-      return response.data;
+      return await authAPI.getProfile();
     } catch (error) {
       throw normalizeError(error);
     }
